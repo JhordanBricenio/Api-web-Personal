@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -32,4 +34,15 @@ public class Usuario {
     @JsonIgnoreProperties({"usuario","hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Blog> blog;
+
+    public void  agregarRol(Rol rol){
+        if (roles == null){
+            roles = new LinkedList<Rol>();
+        }
+        roles.add(rol);
+    }
+
+    public Usuario() {
+        this.roles= new ArrayList<>();
+    }
 }

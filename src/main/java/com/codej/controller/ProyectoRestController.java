@@ -1,8 +1,10 @@
 package com.codej.controller;
 
+import com.codej.model.Image;
 import com.codej.model.Proyecto;
 import com.codej.services.IProyectoService;
 import com.codej.services.IUploadService;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -141,6 +143,37 @@ public class ProyectoRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
+    @PostMapping("proyecto/galeria")
+    public ResponseEntity<?> uploadGaleria(@RequestParam("file")MultipartFile archivo,
+                                           @RequestParam("galeria")String galeria ){
+        Map<String,Object> response= new HashMap<>();
+        Gson gson = new Gson();
+        Image image= gson.fromJson(galeria, Image.class);
+        if(!archivo.isEmpty()) {
+            String nombreArchivo = null;
+            try {
+                nombreArchivo = uploadService.copiar(archivo);
+            } catch (IOException e) {
+                response.put("mensaje", "Error al subir la imagen del proyecto");
+                response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            System.out.println(image.getId());
+            System.out.println(image.getNombre());
+            System.out.println(image.getUrl());
+            System.out.println(image.getProyecto());
+
+            image.setUrl(nombreArchivo);
+            image.setNombre(image.getNombre());
+            image.setProyecto(image.getProyecto());
+
+            proyectoService.guardar(image);
+            response.put("image", image);
+            response.put("mensaje","Has subido correctamente la imagen"+nombreArchivo);
+        }
+        return new ResponseEntity<Map<String, Object>>(response,HttpStatus.CREATED);
+
+    }
 
 
 }

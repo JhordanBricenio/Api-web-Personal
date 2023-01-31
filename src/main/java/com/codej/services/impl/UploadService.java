@@ -3,6 +3,7 @@ package com.codej.services.impl;
 import com.codej.services.IUploadService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -13,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+
+@Service
 public class UploadService implements IUploadService {
     private final static String DIRECTORIO_UPLOAD="uploads";
     @Override
