@@ -32,6 +32,7 @@ public class EtiquetaRestController {
         etiquetaNew.setColor(etiqueta.getColor());
         return etiquetaService.save(etiquetaNew);
     }
+
     @DeleteMapping("/etiqueta/{id}")
     public void delete(@PathVariable Integer id){
         etiquetaService.delete(id);
