@@ -4,6 +4,7 @@ import com.codej.repository.IUsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,10 +40,13 @@ public class WebSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/api/proyecto/**", "/api/upload/img/**"
-                        , "/uploads/**", "/api/etiqueta/**", "/api/blog/**")
+                .requestMatchers(HttpMethod.GET, "/api/upload/img/**","/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/uploads/img/**","/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/uploadss/img/**","/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/proyecto/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/blog/**").permitAll()
 
-                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

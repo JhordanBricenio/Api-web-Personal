@@ -2,6 +2,7 @@ package com.codej.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,11 +16,18 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "El nombre de usuario no puede estar vacio")
     private String nombres;
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "El apellido no puede estar vacio")
     private String apellidos;
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "La clave no puede estar vacio")
     private String password;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String dni;
+    @Column(nullable = false, unique = true)
     private String telefono;
     private Boolean enabled=true;
 
@@ -31,9 +39,9 @@ public class Usuario {
     private List<Rol> roles;
 
     // Relacion con la tabla Blog
-    @JsonIgnoreProperties({"usuario","hibernateLazyInitializer", "handler"})
+   /* @JsonIgnoreProperties({"usuario","hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Blog> blog;
+    private List<Blog> blog;*/
 
     public void  agregarRol(Rol rol){
         if (roles == null){

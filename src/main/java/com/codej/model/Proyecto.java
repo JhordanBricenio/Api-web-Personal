@@ -28,6 +28,10 @@ public class Proyecto {
     @Column(nullable = false)
     private String estado;
     private String foto;
+    @Column(nullable = false)
+    private String url;
+    @Column(nullable = false)
+    private String demo;
 
     // Relacion con la tabla image
     @JsonIgnoreProperties({"proyecto","hibernateLazyInitializer", "handler"})

@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +34,43 @@ public class ProyectoRestController {
     private  final IUploadService uploadService;
 
 
-    @GetMapping("/proyecto")
+    @GetMapping("/proyectos")
     public List<Proyecto> get(){
        return proyectoService.findAll();
+    }
+    @GetMapping("/proyecto/page/{page}")
+    public Page<Proyecto> index(@PathVariable Integer page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        return proyectoService.findAll(pageable);
+    }
+    //Filtrar y paginar
+    @GetMapping("/proyecto")
+    public ResponseEntity<Map<String, Object>> getAllProducts(
+            @RequestParam(required = false) String filtro,
+            @RequestParam(defaultValue = "0") int page   ) {
+
+        try {
+            List<Proyecto> proyectoss;
+            Pageable paging = PageRequest.of(page, 6);
+
+            Page<Proyecto> pageProducts;
+            if (filtro == null)
+                pageProducts = proyectoService.findAll(paging);
+            else
+                pageProducts = proyectoService.findAllByFiltroPage(filtro, paging);
+
+            proyectoss = pageProducts.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("proyects", proyectoss);
+            response.put("currentPage", pageProducts.getNumber());
+            response.put("totalItems", pageProducts.getTotalElements());
+            response.put("totalPages", pageProducts.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/proyecto/{id}")
@@ -43,25 +80,15 @@ public class ProyectoRestController {
 
     @PostMapping("/proyecto")
     public ResponseEntity<?> create(@RequestBody Proyecto proyecto){
-        Map<String, Object> response = new HashMap<>();
-        Proyecto proyectoNew = null;
-        try {
-            proyectoNew = proyectoService.save(proyecto);
-        }catch (Exception e){
-            response.put("mensaje", "Error al crear el proyecto");
-            response.put("error", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
-        response.put("mensaje", "El proyecto ha sido creado con éxito");
-        response.put("proyecto", proyectoNew);
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+        return proyectoService.save(proyecto);
+
     }
 
     @PutMapping("/proyecto/{id}")
     public ResponseEntity<?> update(@RequestBody Proyecto proyecto, @PathVariable Integer id) {
         Map<String, Object> response = new HashMap<>();
         Proyecto proyectoActual = proyectoService.findById(id);
-        Proyecto proyectoUpdated = null;
+        ResponseEntity<?> proyectoUpdated = null;
         if (proyectoActual == null) {
             response.put("mensaje", "Error: no se pudo editar, el proyecto ID: ".concat(id.toString().concat(" no existe en la base de datos")));
             return ResponseEntity.badRequest().body(response);
