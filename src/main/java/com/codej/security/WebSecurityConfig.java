@@ -45,7 +45,11 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/uploadss/img/**","/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/proyecto/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/proyectos").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/blog/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/etiqueta/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/usuario/upload/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/blog/upload/**").permitAll()
 
                 .anyRequest()
                 .authenticated()

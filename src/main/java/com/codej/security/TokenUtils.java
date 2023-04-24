@@ -31,9 +31,11 @@ public class TokenUtils {
         Claims claims=Jwts.claims().setSubject(user.getUsername());
         claims.put("authorities",user.getAuthorities());
         claims.put("email",user.getUsername());
+        claims.put("enabled",user.isEnabled());
         //recuperar datos del usuario y agregarlos al token
         Usuario usuario=usuarioRepository.findOneByEmail(user.getUsername())
                 .orElseThrow(()->new UsuarioNotFoundException("Usuario no encontrado"));
+        claims.put("id",usuario.getId());
         claims.put("nombre",usuario.getNombres());
         claims.put("apellido",usuario.getApellidos());
         Date now=new Date();

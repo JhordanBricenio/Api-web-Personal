@@ -156,7 +156,7 @@ public class ProyectoRestController {
             try {
                 nombreArchivo= uploadService.copiar(archivo);
             }catch (IOException e){
-                response.put("mensaje", "Error al subir la imagen del producto ");
+                response.put("mensaje", "Error al subir la imagen del proyecto ");
                 response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }

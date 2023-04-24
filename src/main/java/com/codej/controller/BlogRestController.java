@@ -50,6 +50,22 @@ public class BlogRestController {
         return blogService.findById(id);
     }
 
+    @PutMapping("/blog/{id}")
+    public Blog update(@RequestBody Blog blog, @PathVariable Integer id) {
+        Blog blogActual = blogService.findById(id);
+        blogActual.setTitulo(blog.getTitulo());
+        blogActual.setContenido(blog.getContenido());
+        blogActual.setImagen(blog.getImagen());
+        blogActual.setFecha(blog.getFecha());
+        blogActual.setEtiquetas(blog.getEtiquetas());
+        return blogService.save(blogActual);
+    }
+
+    @DeleteMapping("/blog/{id}")
+    public void delete(@PathVariable Integer id) {
+        blogService.delete(id);
+    }
+
     @GetMapping("/blog/etiquetas")
     public List<Etiqueta> findAllByEtiquetas() {
         return etiquetaService.findAll();

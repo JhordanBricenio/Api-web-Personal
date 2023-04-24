@@ -31,6 +31,9 @@ public class Usuario {
     private String telefono;
     private Boolean enabled=true;
 
+    @Column(length = 200)
+    private String foto;
+
     // Relacion con la tabla Rol
     @JsonIgnoreProperties({"usuario","hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.EAGER)
